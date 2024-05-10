@@ -10,3 +10,5 @@ resource "aws_instance" "example" {
     Name = "terraform-example"
   }
 }
+
+#all this comment can be deleted
