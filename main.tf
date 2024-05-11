@@ -5,12 +5,13 @@ provider "aws" {
 resource "aws_instance" "example" {
   ami           = "ami-0fb653ca2d3203ac1"
   instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.instance.id]
+  vpc_security_group_ids = [aws_security_group.web_server.id]
 
   user_data = <<-EOF
               #!/bin/bash
-              echo "Hello, World" > index.html
-              nohup busybox httpd -f -p 8080 &
+              echo "<h1>Hello, World</h1>" > /var/www/html/index.html
+              sudo systemctl enable httpd
+              sudo systemctl start httpd
               EOF
 
   user_data_replace_on_change = true
@@ -18,7 +19,7 @@ resource "aws_instance" "example" {
     Name = "terraform-example"
   }
 }
-resource "aws_security_group" "instance" {
+resource "aws_security_group" "web_server" {
   name = "terraform-example-instance"
 
   ingress {
